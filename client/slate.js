@@ -9,10 +9,32 @@ let get = v => {
         pieces.forEach( x=>
             x.mailings.push({code: 'Total', count: api.from(x.mailings).sum(y=>y.count).value })  )
         w.slates = pieces.intersection(price, (x, y) => x.slate === y.slate)
-            .forEach(z=> z.sum = api.from(z.mailings).lastValue.count * Number(z.price)).value
+            .forEach(z=>{
+                z.sum = api.from(z.mailings).lastValue.count * Number(z.price)  }).value
     })
     Session.set('data', v)
 }
+
+import ApolloClient from 'apollo-client'
+import { meteorClientConfig } from 'meteor/apollo'
+const client = new ApolloClient(meteorClientConfig())
+
+// import { Meteor } from 'meteor/meteor';
+import { render } from 'react-dom';
+import React from 'react';
+
+import { ApolloProvider } from 'react-apollo';
+
+import App from '/imports/ui/App';
+
+
+api.module( 'app', {path: '/'}, v=>v.id('app', 'ok') )
+.onRendered(() => {
+  Meteor.setTimeout((() =>render(
+    <ApolloProvider client={client}>
+      <App/>
+    </ApolloProvider>, document.getElementById('app'))), 600)
+})
 
 Meteor.setTimeout(( () => get(restful) ), 2000)
 
@@ -49,7 +71,7 @@ api.define( 'countyDropdown', (v,i)=>v
                     .DIV( {class:'col-sm-4'}, v=>v .UL({class:'multi-column-dropdown'}, countyList(i, index)) )  )  )  )  )  )
 
 let counties = ['19 - Los Angeles', '30 - Orange', '40 - San Luis Obispo', '37 - San Diego', '10 - Fresno']
-api.define( 'threeColumns', v=>v
+api.define( 'countyBar', v=>v
     .NAV( {class: 'tabbar', role:'navigation'}, v=>v
         .DIV( {class: 'collapse navbar-collapse', id:'ba-example-navbar-collapse-1'}, v=>v
             .UL( {class: 'nav navbar-nav'}, v=>v
@@ -73,15 +95,35 @@ api.define( 'underline', (v, label)=>v
         .raw( '<INPUT type="text" required>' )
         .SPAN( {class: 'highlight'} )
         .SPAN( {class: 'bar'} )
-        .LABEL( {class: 'input-label'}, label )
-) )
+        .LABEL( {class: 'input-label'}, label )  ) )
+api.define( 'dialog2cols', (v,t, c1, c2)=>v
+    .class( 'dialog-title', t )
+    .class( 'flex', v=>v
+        .class( 'col-md-6', c1)
+        .class( 'col-md-6', c2)  )  )
+api.define( 'dialogCol', (v, a)=>v
+    .linefeed(20)
+    .for( a, (v,i)=>v.underline(i) )  )
+
+api.define( 'addCandidate', v=>v
+    .dialog2cols( '', ( v=>v
+        .dialogCol([
+          "Candidate Name"
+        , "Candidate's Phone"
+        , "Candidate's Email"
+        , "Note" ])  ), v=>v
+        .dialogCol([
+          "Consultant Name"
+        , "Consultant's Phone"
+        , "Consultant's Email" ])  )  )
+
 let bdw = (...v) => ({borderWidth: addPx(v)})
 let tagSurfix = ['Top', 'Right', 'Bottom', 'Left']
 api.mixin( 'bdis', (t, r, b, l, v)=> // border Individual sides
     api.from(bdw(t, r, b, l)).add( [t,r,b,l].reduce((a,w,i)=> w ? Object.assign(a, {['border' + tagSurfix[i]]:v}) : a), {} ).value )
 api.mixin( 'bd', (w, c)=>({border: addPx([w]) + ' solid ' + (isNaN(c) ? c : color(c))}) )
 let button = (cls, t) => api.css({
-    [cls]:           {colorSet:[0, t], border: 2, size:[120, 40], marginLeft: 14}
+    [cls]:           {colorSet:[0, t], border: 2, borderRadius: 0, size:[120, 40], marginLeft: 14}
   , [cls+':hover']:  {colorSet:[t, 0], bd:[2, t]}
   , [cls+':active']: {colorSet:[t, 0], bd:[2, t], outline: 'none', boxShadow: 'inset 0 5px 5px rgba(0,0,0, .2)' }
   , [cls+':focus']:  {colorSet:[t, 0], bd:[2, t]}
@@ -99,20 +141,6 @@ api.css({
   , 'input:focus ~ .input-label, input:valid ~ .input-label': { top:-20, fontSize: 13, color: color(0).darken(0.4) }
 })
 
-api.define( 'addCandidate', v=>v
-    .class( 'dialog-title' )
-    .class( 'flex', v=>v
-        .class( 'col-md-6', v=>v
-            .linefeed( 20 )
-            .underline( 'Candidate Name')
-            .underline( "Candidate's Phone" )
-            .underline( "Candidate's Email" )
-            .underline( 'Note'  )  )
-        .class( 'col-md-6', v=>v
-            .linefeed( 20 )
-            .underline( 'Consultant Name')
-            .underline( "Consultant's Phone" )
-            .underline( "Consultant's Email" )  )  )  )
 
 api.mixin( 'colorSet', (text, bg)=>({color: (isNaN(text) ? text : color(text)), background: (isNaN(bg) ? bg : color(bg))}) )
 api.mixin( 'luminate', (text, bg, lt)=>({color:color(text), background: lt < 0 ? color(bg).darken(-lt) : color(bg).lighten(lt)}) )
@@ -134,7 +162,11 @@ api.css({
   , '.multi-column-dropdown li a:hover': { luminate:[4, 1, 0.9] }  })
 
 api.module('slate')
-.head( v=> ({ meta: { name:"viewport", content:"width=device-width, initial-scale=1" }  }) )
+.head( v=> ({
+    meta: { name:"viewport", content:"width=device-width, initial-scale=1" }
+  // , link: { rel:"stylesheet", href: "node_modules/material-components-web/dist/material-components-web.css" }
+  // , script: { src:"node_modules/material-components-web/dist/material-components-web.js"}
+}) )
 .body( v=>v
     .navbar( v=>v
         .menu( 'Home', '#' )
@@ -149,21 +181,24 @@ api.module('slate')
         .menu( 'Sales Sheet', '/sheet' )
         .menu( 'Candidate Proof Page', '#' )
         .attrMenu( {id:'sign-in-or-out-button'}, 'Sign In' ) )
-    .DIV(v=>v.threeColumns())
+    .countyBar()
     .include( 'yield' )
-    .modal( 'Add Candiate', 'add-candidate', v=>v.addCandidate(), 'Send' )  )
+    .modal( 'Add Candiate', 'add-candidate', v=>v.addCandidate(), 'Send' )
+    // .SCRIPT( {src:"node_modules/material-components-web/dist/material-components-web.js"} )
+)
 .helpers( county )
 .onStartup( () => {
     $('#form-add-candidate').on('hide.bs.modal', e=>{
         e.preventDefault()
         console.log(e)
     })
-    api.getNode("head").appendChild(                // if (script.readyState)   //IE
-        api.createNode('script').add({              //     script.onreadystatechange = () => {
-            type: "text/javascript"                 //         if ( script.readyState === "loaded" || script.readyState === "complete" ) {
-          , src:"https://apis.google.com/js/api.js" //             script.onreadystatechange = null
-          , onload: () => handleClientLoad() })  )  //             handleClientLoad()  }  }
-                                                    // else script.onload = () => handleClientLoad()
+    api.getNode("head").appendChild(                    // if (script.readyState)   //IE
+        api.createNode('script')                        //     script.onreadystatechange = () => {
+            .add({                                      //         if ( script.readyState === "loaded" || script.readyState === "complete" ) {
+                type: "text/javascript"                 //             script.onreadystatechange = null
+              , src:"https://apis.google.com/js/api.js" //             handleClientLoad()  }  }
+              , onload: () => handleClientLoad() })  )  // else script.onload = () => handleClientLoad()
+
     let isAuthorized, currentApiRequest
 
     window.updateSigninStatus = (isSignedIn) => {
@@ -334,5 +369,7 @@ api.module('salesSheet')
                             .consultant( 'Email',  "{email}")  )  )  )  )  )  )  )  )  )
 .helpers(v=>({ data: () => Session.get('data') }))
 .onRendered( o => () =>
-    $(document).on("click", "#s-button", function (e, v) { $(".dialog-title").html( $(this).data('id') ) })  )
+    $(document).on("click", "#s-button", function (e, v) {
+        console.log('click')
+        $(".dialog-title").html( $(this).data('id') ) })  )
 .build()
