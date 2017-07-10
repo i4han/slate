@@ -1,0 +1,252 @@
+  meteor run --port 3000 --settings /Users/isaac/workspace/slate/.settings.json
+  /Users/isaac/workspace/slate
+[[[[[ ~/workspace/slate ]]]]]
+
+=> Started proxy.
+[34mI20170705-16:57:54.902(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `1ofs_all_combos` (`id` INTEGER NOT NULL auto_increment , `precinct` CHAR(11), `combo` VARCHAR(2000), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.941(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `1ofs_uniques` (`id` INTEGER NOT NULL auto_increment , `combo` VARCHAR(2000), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.942(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cand` (`cand_id` INTEGER(10) UNSIGNED NOT NULL auto_increment , `county` CHAR(2), `ixcode` CHAR(2), `distcode` CHAR(10), `subcode` CHAR(10), `racecode` VARCHAR(3), `seatcode` VARCHAR(3), `numseats` INTEGER(11) DEFAULT '1', `match_type` INTEGER(3) UNSIGNED, `office` CHAR(100), `office_id` INTEGER(10) UNSIGNED, `first_name` CHAR(30), `last_name` CHAR(30), `occupation` CHAR(50), `party` CHAR(1), `rank` INTEGER(3) UNSIGNED DEFAULT '0', `paid` CHAR(2) NOT NULL DEFAULT 'A', `notes` CHAR(64), `address1` VARCHAR(100), `address2` VARCHAR(100), `city` VARCHAR(30), `state` CHAR(2), `zip` VARCHAR(12), `Email` VARCHAR(100), `phone` VARCHAR(15), `phone2` VARCHAR(15), `exp_revenue` DECIMAL DEFAULT '0.00', `consultant` VARCHAR(200), `consultantphone` VARCHAR(20), `consultantemail` VARCHAR(100), `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, `in_fill` CHAR(1) DEFAULT 'N', `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`cand_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.943(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cand_consultants` (`cand_id` INTEGER(10) UNSIGNED NOT NULL , `consultant_id` INTEGER(10) NOT NULL DEFAULT '0', `contact` INTEGER(1) NOT NULL DEFAULT '0', `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`cand_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.943(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cand_counts` (`cand_id` INTEGER(10) UNSIGNED NOT NULL auto_increment , `category` VARCHAR(10) NOT NULL DEFAULT '' , `num_voters` BIGINT, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`cand_id`, `category`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.943(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cand_district` (`cand_id` INTEGER(10) UNSIGNED NOT NULL , `type` CHAR(1) NOT NULL , `district` INTEGER(3) UNSIGNED NOT NULL , `sort` INTEGER(3) UNSIGNED NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`cand_id`, `type`, `district`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.944(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cand_donotemail` (`cand_id` INTEGER(10) UNSIGNED NOT NULL , `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`cand_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.944(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cand_donotsale` (`id` INTEGER(10) UNSIGNED NOT NULL auto_increment , `cand_id` INTEGER(10) UNSIGNED NOT NULL, `subslateid` INTEGER(10) UNSIGNED NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.944(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cand_drop` (`cand_id` INTEGER(10) UNSIGNED NOT NULL , `drop_rank` INTEGER(10) UNSIGNED, `drop_text_rank` INTEGER(10) UNSIGNED, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`cand_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.945(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cand_email_counts` (`cand_id` INTEGER(10) UNSIGNED NOT NULL auto_increment , `category` VARCHAR(10) NOT NULL DEFAULT '' , `num_voters` BIGINT, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`cand_id`, `category`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.945(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cand_image` (`cand_id` INTEGER(10) UNSIGNED NOT NULL , `image` VARCHAR(250), `website` VARCHAR(500), `facebook` VARCHAR(500), `modified` TIME NOT NULL DEFAULT CURRENT_TIMESTAMP, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`cand_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.945(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cand_info` (`cand_id` INTEGER(10) UNSIGNED NOT NULL , `notes` TEXT NOT NULL, `callback` DATETIME, `refused` INTEGER(1) NOT NULL, `refused_date` DATETIME, `phone` CHAR(1), `phone2` CHAR(1), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`cand_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.945(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cand_password` (`cand_id` INTEGER(10) UNSIGNED NOT NULL , `password` VARCHAR(8), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`cand_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.946(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cand_salesperson` (`id` INTEGER NOT NULL auto_increment , `salesperson_id` VARCHAR(25) NOT NULL, `cand_id` INTEGER(10) UNSIGNED, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.946(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cand_text` (`text_id` INTEGER(10) UNSIGNED NOT NULL auto_increment , `cand_id` INTEGER(10), `SubSlateId` INTEGER(10) UNSIGNED NOT NULL, `version` CHAR(2), `text` TEXT, `modified` TIME NOT NULL DEFAULT CURRENT_TIMESTAMP, `in_fill` CHAR(1), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`text_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.946(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cand_text_conditions` (`version` INTEGER(11) NOT NULL auto_increment , `subslateid` INTEGER(10), `where_clause` CHAR(128), `description` CHAR(255), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`version`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.946(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cand_text_email` (`ID` INTEGER(10) UNSIGNED NOT NULL auto_increment , `adddate` DATETIME NOT NULL, `cand_id` INTEGER(10) UNSIGNED NOT NULL, `readreceipt` DATETIME, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`ID`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.947(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `consultant_notes` (`consultant_id` INTEGER(10) UNSIGNED NOT NULL , `notes` TEXT, `status` VARCHAR(1), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`consultant_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.947(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cp_1ofs_uniques` (`id` INTEGER NOT NULL auto_increment , `combo` CHAR(255), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.947(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cp_pages` (`page_id` INTEGER(10) UNSIGNED NOT NULL auto_increment , `version_id` CHAR(2), `combo` CHAR(255), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`page_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.947(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cp_pages_html` (`page_id` INTEGER(10) UNSIGNED NOT NULL , `html` TEXT, PRIMARY KEY (`page_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.948(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cp_pages_html_debug` (`page_id` INTEGER(10) UNSIGNED NOT NULL , `html` TEXT, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`page_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.948(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `cp_tmp_page` (`id` INTEGER NOT NULL auto_increment , `page_id` INTEGER(10) UNSIGNED, `version_id` INTEGER(10) UNSIGNED, `cand_id` CHAR(10), `first_name` CHAR(30), `last_name` CHAR(30), `occupation` CHAR(50), `office_id` INTEGER(10) UNSIGNED, `office` CHAR(64), `break` CHAR(1), `text` TEXT, `porder` INTEGER(10) UNSIGNED, `rank` CHAR(10), `county` CHAR(2), `ixcode` CHAR(2), `distcode` CHAR(10), `paid` CHAR(2), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.948(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `current_mailing` (`id` INTEGER NOT NULL auto_increment , `mailing` VARCHAR(200) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:54.949(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `email_counts` (`CAND_ID` INTEGER(10) UNSIGNED NOT NULL DEFAULT '0' , `num_emails` DECIMAL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`CAND_ID`)) ENGINE=InnoDB;
+=> Started your app.
+
+=> App running at: http://localhost:3000/
+[34mW20170705-16:57:54.953(-7)? (STDERR) [39m[35mUnhandled rejection SequelizeDatabaseError: Invalid default value for 'modified'[39m
+[34mW20170705-16:57:54.954(-7)? (STDERR) [39m[35m    at Query.formatError (/Users/isaac/workspace/slate/node_modules/sequelize/lib/dialects/mysql/query.js:222:16)[39m
+[34mW20170705-16:57:54.954(-7)? (STDERR) [39m[35m    at Query.onResult (/Users/isaac/workspace/slate/node_modules/sequelize/lib/dialects/mysql/query.js:55:23)[39m
+[34mW20170705-16:57:54.954(-7)? (STDERR) [39m[35m    at Query.Command.execute (/Users/isaac/workspace/slate/node_modules/mysql2/lib/commands/command.js:30:12)[39m
+[34mW20170705-16:57:54.955(-7)? (STDERR) [39m[35m    at Connection.handlePacket (/Users/isaac/workspace/slate/node_modules/mysql2/lib/connection.js:500:28)[39m
+[34mW20170705-16:57:54.955(-7)? (STDERR) [39m[35m    at PacketParser.onPacket (/Users/isaac/workspace/slate/node_modules/mysql2/lib/connection.js:94:16)[39m
+[34mW20170705-16:57:54.956(-7)? (STDERR) [39m[35m    at PacketParser.executeStart (/Users/isaac/workspace/slate/node_modules/mysql2/lib/packet_parser.js:77:14)[39m
+[34mW20170705-16:57:54.957(-7)? (STDERR) [39m[35m    at Socket.<anonymous> (/Users/isaac/workspace/slate/node_modules/mysql2/lib/connection.js:102:29)[39m
+[34mW20170705-16:57:54.957(-7)? (STDERR) [39m[35m    at emitOne (events.js:77:13)[39m
+[34mW20170705-16:57:54.958(-7)? (STDERR) [39m[35m    at Socket.emit (events.js:169:7)[39m
+[34mW20170705-16:57:54.958(-7)? (STDERR) [39m[35m    at readableAddChunk (_stream_readable.js:153:18)[39m
+[34mW20170705-16:57:54.958(-7)? (STDERR) [39m[35m    at Socket.Readable.push (_stream_readable.js:111:10)[39m
+[34mW20170705-16:57:54.959(-7)? (STDERR) [39m[35m    at TCP.onread (net.js:540:20)[39m
+[34mW20170705-16:57:54.959(-7)? (STDERR) [39m[35mFrom previous event:[39m
+[34mW20170705-16:57:54.959(-7)? (STDERR) [39m[35m    at Query.run (/Users/isaac/workspace/slate/node_modules/sequelize/lib/dialects/mysql/query.js:44:12)[39m
+[34mW20170705-16:57:54.959(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/node_modules/sequelize/lib/sequelize.js:529:32[39m
+[34mW20170705-16:57:54.960(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/node_modules/retry-as-promised/index.js:40:21[39m
+[34mW20170705-16:57:54.960(-7)? (STDERR) [39m[35m    at retryAsPromised (/Users/isaac/workspace/slate/node_modules/retry-as-promised/index.js:30:10)[39m
+[34mW20170705-16:57:54.960(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/node_modules/sequelize/lib/sequelize.js:529:14[39m
+[34mW20170705-16:57:54.961(-7)? (STDERR) [39m[35mFrom previous event:[39m
+[34mW20170705-16:57:54.962(-7)? (STDERR) [39m[35m    at Sequelize.query (/Users/isaac/workspace/slate/node_modules/sequelize/lib/sequelize.js:526:8)[39m
+[34mW20170705-16:57:54.962(-7)? (STDERR) [39m[35m    at QueryInterface.createTable (/Users/isaac/workspace/slate/node_modules/sequelize/lib/query-interface.js:169:29)[39m
+[34mW20170705-16:57:54.962(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/node_modules/sequelize/lib/model.js:1114:37[39m
+[34mW20170705-16:57:54.963(-7)? (STDERR) [39m[35m    at processImmediate [as _immediateCallback] (timers.js:396:17)[39m
+[34mW20170705-16:57:54.963(-7)? (STDERR) [39m[35mFrom previous event:[39m
+[34mW20170705-16:57:54.964(-7)? (STDERR) [39m[35m    at Function.sync (/Users/isaac/workspace/slate/node_modules/sequelize/lib/model.js:1114:6)[39m
+[34mW20170705-16:57:54.964(-7)? (STDERR) [39m[35m    at server/db.js:84:15[39m
+[34mW20170705-16:57:54.964(-7)? (STDERR) [39m[35m    at Array.map (native)[39m
+[34mW20170705-16:57:54.965(-7)? (STDERR) [39m[35m    at meteorInstall.server.db.js (server/db.js:81:4)[39m
+[34mW20170705-16:57:54.965(-7)? (STDERR) [39m[35m    at fileEvaluate (packages/modules-runtime.js:333:9)[39m
+[34mW20170705-16:57:54.965(-7)? (STDERR) [39m[35m    at require (packages/modules-runtime.js:228:16)[39m
+[34mW20170705-16:57:54.966(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/.meteor/local/build/programs/server/app/app.js:145:1[39m
+[34mW20170705-16:57:54.966(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/.meteor/local/build/programs/server/boot.js:338:34[39m
+[34mW20170705-16:57:54.966(-7)? (STDERR) [39m[35m    at Array.forEach (native)[39m
+[34mW20170705-16:57:54.966(-7)? (STDERR) [39m[35m    at Function._.each._.forEach (/Users/isaac/.meteor/packages/meteor-tool/.1.5.0.u2qm97++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib/node_modules/underscore/underscore.js:79:11)[39m
+[34mW20170705-16:57:54.967(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/.meteor/local/build/programs/server/boot.js:158:5[39m
+[34mW20170705-16:57:54.967(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/.meteor/local/build/programs/server/boot.js:387:5[39m
+[34mW20170705-16:57:54.968(-7)? (STDERR) [39m[35m    at Function.run (/Users/isaac/workspace/slate/.meteor/local/build/programs/server/profile.js:510:12)[39m
+[34mW20170705-16:57:54.968(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/.meteor/local/build/programs/server/boot.js:386:11[39m
+[34mW20170705-16:57:54.969(-7)? (STDERR) [39m[35mUnhandled rejection SequelizeDatabaseError: Invalid default value for 'modified'[39m
+[34mW20170705-16:57:54.969(-7)? (STDERR) [39m[35m    at Query.formatError (/Users/isaac/workspace/slate/node_modules/sequelize/lib/dialects/mysql/query.js:222:16)[39m
+[34mW20170705-16:57:54.970(-7)? (STDERR) [39m[35m    at Query.onResult (/Users/isaac/workspace/slate/node_modules/sequelize/lib/dialects/mysql/query.js:55:23)[39m
+[34mW20170705-16:57:54.970(-7)? (STDERR) [39m[35m    at Query.Command.execute (/Users/isaac/workspace/slate/node_modules/mysql2/lib/commands/command.js:30:12)[39m
+[34mW20170705-16:57:54.971(-7)? (STDERR) [39m[35m    at Connection.handlePacket (/Users/isaac/workspace/slate/node_modules/mysql2/lib/connection.js:500:28)[39m
+[34mW20170705-16:57:54.971(-7)? (STDERR) [39m[35m    at PacketParser.onPacket (/Users/isaac/workspace/slate/node_modules/mysql2/lib/connection.js:94:16)[39m
+[34mW20170705-16:57:54.971(-7)? (STDERR) [39m[35m    at PacketParser.executeStart (/Users/isaac/workspace/slate/node_modules/mysql2/lib/packet_parser.js:77:14)[39m
+[34mW20170705-16:57:54.972(-7)? (STDERR) [39m[35m    at Socket.<anonymous> (/Users/isaac/workspace/slate/node_modules/mysql2/lib/connection.js:102:29)[39m
+[34mW20170705-16:57:54.972(-7)? (STDERR) [39m[35m    at emitOne (events.js:77:13)[39m
+[34mW20170705-16:57:54.972(-7)? (STDERR) [39m[35m    at Socket.emit (events.js:169:7)[39m
+[34mW20170705-16:57:54.973(-7)? (STDERR) [39m[35m    at readableAddChunk (_stream_readable.js:153:18)[39m
+[34mW20170705-16:57:54.973(-7)? (STDERR) [39m[35m    at Socket.Readable.push (_stream_readable.js:111:10)[39m
+[34mW20170705-16:57:54.973(-7)? (STDERR) [39m[35m    at TCP.onread (net.js:540:20)[39m
+[34mW20170705-16:57:54.973(-7)? (STDERR) [39m[35mFrom previous event:[39m
+[34mW20170705-16:57:54.974(-7)? (STDERR) [39m[35m    at Query.run (/Users/isaac/workspace/slate/node_modules/sequelize/lib/dialects/mysql/query.js:44:12)[39m
+[34mW20170705-16:57:54.974(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/node_modules/sequelize/lib/sequelize.js:529:32[39m
+[34mW20170705-16:57:54.975(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/node_modules/retry-as-promised/index.js:40:21[39m
+[34mW20170705-16:57:54.980(-7)? (STDERR) [39m[35m    at retryAsPromised (/Users/isaac/workspace/slate/node_modules/retry-as-promised/index.js:30:10)[39m
+[34mW20170705-16:57:54.981(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/node_modules/sequelize/lib/sequelize.js:529:14[39m
+[34mW20170705-16:57:54.981(-7)? (STDERR) [39m[35mFrom previous event:[39m
+[34mW20170705-16:57:54.981(-7)? (STDERR) [39m[35m    at Sequelize.query (/Users/isaac/workspace/slate/node_modules/sequelize/lib/sequelize.js:526:8)[39m
+[34mW20170705-16:57:54.982(-7)? (STDERR) [39m[35m    at QueryInterface.createTable (/Users/isaac/workspace/slate/node_modules/sequelize/lib/query-interface.js:169:29)[39m
+[34mW20170705-16:57:54.982(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/node_modules/sequelize/lib/model.js:1114:37[39m
+[34mW20170705-16:57:54.982(-7)? (STDERR) [39m[35m    at processImmediate [as _immediateCallback] (timers.js:396:17)[39m
+[34mW20170705-16:57:54.983(-7)? (STDERR) [39m[35mFrom previous event:[39m
+[34mW20170705-16:57:54.983(-7)? (STDERR) [39m[35m    at Function.sync (/Users/isaac/workspace/slate/node_modules/sequelize/lib/model.js:1114:6)[39m
+[34mW20170705-16:57:54.983(-7)? (STDERR) [39m[35m    at server/db.js:84:15[39m
+[34mW20170705-16:57:54.984(-7)? (STDERR) [39m[35m    at Array.map (native)[39m
+[34mW20170705-16:57:54.984(-7)? (STDERR) [39m[35m    at meteorInstall.server.db.js (server/db.js:81:4)[39m
+[34mW20170705-16:57:54.984(-7)? (STDERR) [39m[35m    at fileEvaluate (packages/modules-runtime.js:333:9)[39m
+[34mW20170705-16:57:54.985(-7)? (STDERR) [39m[35m    at require (packages/modules-runtime.js:228:16)[39m
+[34mW20170705-16:57:54.985(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/.meteor/local/build/programs/server/app/app.js:145:1[39m
+[34mW20170705-16:57:54.986(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/.meteor/local/build/programs/server/boot.js:338:34[39m
+[34mW20170705-16:57:54.986(-7)? (STDERR) [39m[35m    at Array.forEach (native)[39m
+[34mW20170705-16:57:54.987(-7)? (STDERR) [39m[35m    at Function._.each._.forEach (/Users/isaac/.meteor/packages/meteor-tool/.1.5.0.u2qm97++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib/node_modules/underscore/underscore.js:79:11)[39m
+[34mW20170705-16:57:54.987(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/.meteor/local/build/programs/server/boot.js:158:5[39m
+[34mW20170705-16:57:54.988(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/.meteor/local/build/programs/server/boot.js:387:5[39m
+[34mW20170705-16:57:54.988(-7)? (STDERR) [39m[35m    at Function.run (/Users/isaac/workspace/slate/.meteor/local/build/programs/server/profile.js:510:12)[39m
+[34mW20170705-16:57:54.988(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/.meteor/local/build/programs/server/boot.js:386:11[39m
+[34mI20170705-16:57:55.000(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `email_settings` (`id` INTEGER NOT NULL auto_increment , `subslateid` INTEGER(10) NOT NULL, `num` INTEGER(11) NOT NULL, `price` DECIMAL NOT NULL, `min_emails` INTEGER(11) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.000(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `filler_text` (`tf_id` INTEGER(10) UNSIGNED NOT NULL auto_increment , `col_num` CHAR(1), `tot_lines` INTEGER(4), `text1` CHAR(64), `text2` CHAR(64), `text3` CHAR(64), `text4` CHAR(64), `text5` CHAR(64), `text6` CHAR(64), `text7` CHAR(64), `text8` CHAR(64), `text9` CHAR(64), `text10` CHAR(64), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`tf_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.000(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `hide` (`id` INTEGER NOT NULL auto_increment , `cand_id` INTEGER(10) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.000(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `mailing_pages` (`page_id` INTEGER(10) UNSIGNED NOT NULL DEFAULT '0' , `num_voters` BIGINT NOT NULL DEFAULT '0', `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`page_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.001(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `mailings` (`MailingID` INTEGER(10) UNSIGNED NOT NULL auto_increment , `SubSlateID` INTEGER(10) UNSIGNED, `Category` VARCHAR(10) NOT NULL, `NumMailings` INTEGER(10) UNSIGNED NOT NULL, `MailDates` VARCHAR(400) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`MailingID`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.001(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `office` (`office_id` INTEGER(10) UNSIGNED NOT NULL auto_increment , `county` CHAR(2), `office` CHAR(100), `office2` CHAR(100), `cnty` CHAR(2), `ix` CHAR(2), `dist` CHAR(10), `sub` CHAR(10), `race` CHAR(3), `seat` CHAR(3), `porder` INTEGER(10) UNSIGNED, `break` CHAR(1) DEFAULT 'Y', `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`office_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.001(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `office_makeup` (`cand_id` INTEGER(10) UNSIGNED NOT NULL , `makeup` VARCHAR(2) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`cand_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.001(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `office_notes` (`cand_id` INTEGER(10) UNSIGNED NOT NULL , `notes` VARCHAR(125) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`cand_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.001(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `office_temp` (`id` INTEGER NOT NULL auto_increment , `office_id` INTEGER(10) UNSIGNED NOT NULL DEFAULT '0', `county` CHAR(2), `office` CHAR(100), `office2` CHAR(100), `cnty` CHAR(2), `ix` CHAR(2), `dist` CHAR(10), `sub` CHAR(10), `race` CHAR(3), `seat` CHAR(3), `porder` INTEGER(10) UNSIGNED, `break` CHAR(1) DEFAULT 'Y', `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.002(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `overlap` (`id` INTEGER(10) UNSIGNED NOT NULL auto_increment , `cand_id` INTEGER(10) UNSIGNED NOT NULL, `subslateid` INTEGER(10), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.002(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `page_cands` (`page_id` INTEGER(10) UNSIGNED NOT NULL , `cand_id` INTEGER(10) UNSIGNED NOT NULL , `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`page_id`, `cand_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.002(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `page_counts` (`page_id` INTEGER(10) UNSIGNED NOT NULL auto_increment , `category` VARCHAR(10) NOT NULL DEFAULT '' , `num_voters` BIGINT, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`page_id`, `category`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.003(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `page_profits` (`id` INTEGER NOT NULL auto_increment , `page_id` INTEGER(10) UNSIGNED, `profit` DECIMAL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.003(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `pages` (`page_id` INTEGER(10) UNSIGNED NOT NULL auto_increment , `version_id` CHAR(3), `combo` VARCHAR(2000), `party` CHAR(2), `suppress` INTEGER(1), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`page_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.003(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `pages_html` (`page_id` INTEGER(10) UNSIGNED NOT NULL , `html` TEXT, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`page_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.003(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `pages_html_debug` (`page_id` INTEGER(10) UNSIGNED NOT NULL , `html` TEXT, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`page_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.003(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `pmatch` (`id` INTEGER NOT NULL auto_increment , `cand_id` INTEGER(11) UNSIGNED NOT NULL DEFAULT '0', `county` CHAR(2), `precinct` VARCHAR(12), `match_type` INTEGER(4) UNSIGNED, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.004(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `pmatch_county_ind` (`id` INTEGER NOT NULL auto_increment , `cand_id` INTEGER(10) UNSIGNED NOT NULL DEFAULT '0', `county` CHAR(2), `precinct` VARCHAR(12), `match_type` INTEGER(3) UNSIGNED, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.004(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `pmatch_county_ind_infill` (`id` INTEGER NOT NULL auto_increment , `cand_id` INTEGER(10) UNSIGNED NOT NULL DEFAULT '0', `county` CHAR(2), `precinct` VARCHAR(12), `match_type` INTEGER(3) UNSIGNED, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.004(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `pmatch_cw` (`id` INTEGER NOT NULL auto_increment , `cand_id` INTEGER(10) UNSIGNED NOT NULL DEFAULT '0', `county` CHAR(2), `precinct` VARCHAR(12), `match_type` INTEGER(3) UNSIGNED, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.005(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `pmatch_cw_infill` (`id` INTEGER NOT NULL auto_increment , `cand_id` INTEGER(10) UNSIGNED NOT NULL DEFAULT '0', `county` CHAR(2), `precinct` VARCHAR(12), `match_type` INTEGER(3) UNSIGNED, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.005(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `pmatch_direct` (`id` INTEGER NOT NULL auto_increment , `cand_id` INTEGER(10) UNSIGNED NOT NULL DEFAULT '0', `county` CHAR(2), `precinct` VARCHAR(12), `match_type` INTEGER(3) UNSIGNED, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.005(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `pmatch_direct_infill` (`id` INTEGER NOT NULL auto_increment , `cand_id` INTEGER(10) UNSIGNED NOT NULL DEFAULT '0', `county` CHAR(2), `precinct` VARCHAR(12), `match_type` INTEGER(3) UNSIGNED, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.005(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `pmatch_dw` (`id` INTEGER NOT NULL auto_increment , `cand_id` INTEGER(10) UNSIGNED NOT NULL DEFAULT '0', `county` CHAR(2), `precinct` VARCHAR(12), `match_type` INTEGER(3) UNSIGNED, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.007(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `pmatch_dw_infill` (`id` INTEGER NOT NULL auto_increment , `cand_id` INTEGER(10) UNSIGNED NOT NULL DEFAULT '0', `county` CHAR(2), `precinct` VARCHAR(12), `match_type` INTEGER(3) UNSIGNED, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.007(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `pmatch_sw` (`id` INTEGER NOT NULL auto_increment , `cand_id` INTEGER(10) UNSIGNED NOT NULL DEFAULT '0', `county` CHAR(2), `precinct` VARCHAR(12), `match_type` INTEGER(3) UNSIGNED, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.018(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `pmatch_sw_infill` (`id` INTEGER NOT NULL auto_increment , `cand_id` INTEGER(10) UNSIGNED NOT NULL DEFAULT '0', `county` CHAR(2), `precinct` VARCHAR(12), `match_type` INTEGER(3) UNSIGNED, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.018(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `rpt_cand_cnty` (`id` INTEGER NOT NULL auto_increment , `cand_id` INTEGER(11) UNSIGNED NOT NULL DEFAULT '0', `county` CHAR(2), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.019(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `rpt_cand_first_appearance` (`cand_id` INTEGER(10) UNSIGNED NOT NULL , `page_id` INTEGER(10) UNSIGNED NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`cand_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.024(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `rpt_cand_text_first_appearance` (`cand_id` INTEGER(10) UNSIGNED NOT NULL , `version` INTEGER(10) UNSIGNED NOT NULL , `page_id` INTEGER(10) NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`cand_id`, `version`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.028(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `rpt_cand_voters` (`cand_id` INTEGER(10) UNSIGNED NOT NULL , `num_voters` INTEGER(10) UNSIGNED, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`cand_id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.041(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `rpt_overflow` (`id` INTEGER NOT NULL auto_increment , `page_id` INTEGER(10) UNSIGNED, `version_id` INTEGER(10) UNSIGNED, `cand_id` CHAR(10), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.042(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `rpt_overflow_voters` (`id` INTEGER NOT NULL auto_increment , `cand_id` INTEGER(10) UNSIGNED NOT NULL, `tot_pages` INTEGER(10) UNSIGNED, `num_voters` INTEGER(10) UNSIGNED, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.044(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `rpt_page_cnty` (`page_id` INTEGER(10) UNSIGNED NOT NULL , `CNTY` CHAR(2) NOT NULL , `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`page_id`, `CNTY`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.049(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `rpt_page_voters` (`id` INTEGER NOT NULL auto_increment , `page_id` INTEGER(10) UNSIGNED, `num_voters` BIGINT NOT NULL DEFAULT '0', `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.052(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `sales` (`ID` INTEGER(10) UNSIGNED NOT NULL auto_increment , `CAND_ID` INTEGER(10) UNSIGNED NOT NULL, `SubSlateID` INTEGER(10) UNSIGNED, `AMOUNT` DECIMAL NOT NULL, `EMAILAMOUNT` DECIMAL, `VOTERS` INTEGER(10) UNSIGNED NOT NULL, `TXNID` VARCHAR(50), `paid` DECIMAL, `paid_mark` CHAR(1) DEFAULT 'Y', `duedate` DATETIME, `adddate` TIME NOT NULL DEFAULT CURRENT_TIMESTAMP, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`ID`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.100(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `tbd` (`id` INTEGER(10) UNSIGNED NOT NULL auto_increment , `cand_id` INTEGER(10) UNSIGNED NOT NULL, `subslateid` INTEGER(10) UNSIGNED NOT NULL, `count` INTEGER(10) UNSIGNED NOT NULL DEFAULT '1', `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.102(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `tmp_page` (`id` INTEGER NOT NULL auto_increment , `page_id` INTEGER(10) UNSIGNED, `version_id` INTEGER(10) UNSIGNED, `cand_id` CHAR(10), `first_name` CHAR(30), `last_name` CHAR(30), `occupation` CHAR(50), `office_id` INTEGER(10) UNSIGNED, `office` CHAR(64), `break` CHAR(1), `text_id` INTEGER(10) UNSIGNED, `text` TEXT, `porder` INTEGER(10) UNSIGNED, `rank` INTEGER(11), `paid` CHAR(2), `notes` CHAR(64), `seatcode` VARCHAR(3), `featured_cand` CHAR(1), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.102(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `voters` (`MAILSEQN` CHAR(9) DEFAULT '', `CNTY` CHAR(2) DEFAULT '', `FULLPR` CHAR(11) DEFAULT '', `CONSPR` CHAR(11) DEFAULT '', `FPREC` CHAR(9) DEFAULT '', `LNAME` VARCHAR(255) DEFAULT '', `FNAME` VARCHAR(255) DEFAULT '', `MNAME` VARCHAR(255) DEFAULT '', `ADDRESS` VARCHAR(255) DEFAULT '', `MEXTRA` VARCHAR(255) DEFAULT '', `MCSZ` VARCHAR(255) DEFAULT '', `CITY` VARCHAR(255) DEFAULT '', `STATE` CHAR(2) DEFAULT '', `ZIP` CHAR(5) DEFAULT '', `ZIP4` CHAR(4) DEFAULT '', `RZIP` CHAR(5) DEFAULT '', `PRIM_ID` CHAR(12) DEFAULT '', `PARTY` CHAR(2) DEFAULT '', `SEX` CHAR(1) DEFAULT '', `AGE` CHAR(2) DEFAULT '', `ETHNIC` CHAR(2) DEFAULT '', `AFAM` CHAR(1) DEFAULT '', `LGBTDOMPARTNER` CHAR(1) DEFAULT '', `HPT_NT` CHAR(1) DEFAULT '', `PERMAV` CHAR(1) DEFAULT '', `PDINEIGHBORHOOD` CHAR(2) DEFAULT '', `CD` CHAR(2) DEFAULT '', `SD` CHAR(2) DEFAULT '', `AD` CHAR(2) DEFAULT '', `NCITY` VARCHAR(10) DEFAULT '', `SUP` VARCHAR(10) DEFAULT '', `USD` VARCHAR(10) DEFAULT '', `LATINO` CHAR(1) DEFAULT '', `EMAIL` VARCHAR(255) DEFAULT '', `DRLINE` VARCHAR(255) DEFAULT '', `HNAME1` VARCHAR(255) DEFAULT '', `VOTER_ID` INTEGER(10) NOT NULL auto_increment , `PAGE_ID` INTEGER(10) UNSIGNED, `SUPPRESS` INTEGER(1) DEFAULT '0', `AVHOUSE` CHAR(1) DEFAULT '', `CVG` CHAR(1) DEFAULT '', `BWD` CHAR(1) DEFAULT '', `LEVINE` CHAR(1) DEFAULT '', `SENIOR` CHAR(1) DEFAULT '', `MSS_ENDOR` CHAR(30) DEFAULT '', `MSS_SEQ` CHAR(8) DEFAULT '', `ZIP10` CHAR(12) DEFAULT '', `FORMCODE` CHAR(10) DEFAULT '', `FILE_TYPE` CHAR(5) DEFAULT '', `DP` CHAR(2) DEFAULT '', `CHKDGT` CHAR(1) DEFAULT '', `CART` CHAR(4) DEFAULT '', `ELOT` CHAR(5) DEFAULT '', `WS` CHAR(7) DEFAULT '', `BRF` CHAR(1) DEFAULT '', `RC` CHAR(2) DEFAULT '', `TWMAIL_ORD` CHAR(8) DEFAULT '', `PRC_CAT` CHAR(5) DEFAULT '', `POSTAGE` CHAR(10) DEFAULT '', `IMB_ADR` CHAR(31) DEFAULT '', `OPTENDRS` CHAR(40) DEFAULT '', `PLLTNMBR` CHAR(6) DEFAULT '', `SORTINFO` CHAR(11) DEFAULT '', `SORTMARK` CHAR(10) DEFAULT '', `ENTRY_POINT` CHAR(5) DEFAULT '', `ENT_PT_NAM` CHAR(35) DEFAULT '', PRIMARY KEY (`VOTER_ID`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.103(-7)? [39mExecuting (default): CREATE TABLE IF NOT EXISTS `posts` (`id` INTEGER NOT NULL auto_increment , `content` VARCHAR(255), `views` INTEGER, PRIMARY KEY (`id`)) ENGINE=InnoDB;
+[34mI20170705-16:57:55.103(-7)? [39mExecuting (default): SHOW INDEX FROM `1ofs_all_combos`
+[34mW20170705-16:57:55.103(-7)? (STDERR) [39m[35mUnhandled rejection SequelizeDatabaseError: Invalid default value for 'adddate'[39m
+[34mW20170705-16:57:55.104(-7)? (STDERR) [39m[35m    at Query.formatError (/Users/isaac/workspace/slate/node_modules/sequelize/lib/dialects/mysql/query.js:222:16)[39m
+[34mW20170705-16:57:55.104(-7)? (STDERR) [39m[35m    at Query.onResult (/Users/isaac/workspace/slate/node_modules/sequelize/lib/dialects/mysql/query.js:55:23)[39m
+[34mW20170705-16:57:55.104(-7)? (STDERR) [39m[35m    at Query.Command.execute (/Users/isaac/workspace/slate/node_modules/mysql2/lib/commands/command.js:30:12)[39m
+[34mW20170705-16:57:55.105(-7)? (STDERR) [39m[35m    at Connection.handlePacket (/Users/isaac/workspace/slate/node_modules/mysql2/lib/connection.js:500:28)[39m
+[34mW20170705-16:57:55.105(-7)? (STDERR) [39m[35m    at PacketParser.onPacket (/Users/isaac/workspace/slate/node_modules/mysql2/lib/connection.js:94:16)[39m
+[34mW20170705-16:57:55.105(-7)? (STDERR) [39m[35m    at PacketParser.executeStart (/Users/isaac/workspace/slate/node_modules/mysql2/lib/packet_parser.js:77:14)[39m
+[34mW20170705-16:57:55.105(-7)? (STDERR) [39m[35m    at Socket.<anonymous> (/Users/isaac/workspace/slate/node_modules/mysql2/lib/connection.js:102:29)[39m
+[34mW20170705-16:57:55.106(-7)? (STDERR) [39m[35m    at emitOne (events.js:77:13)[39m
+[34mW20170705-16:57:55.106(-7)? (STDERR) [39m[35m    at Socket.emit (events.js:169:7)[39m
+[34mW20170705-16:57:55.106(-7)? (STDERR) [39m[35m    at readableAddChunk (_stream_readable.js:153:18)[39m
+[34mW20170705-16:57:55.106(-7)? (STDERR) [39m[35m    at Socket.Readable.push (_stream_readable.js:111:10)[39m
+[34mW20170705-16:57:55.107(-7)? (STDERR) [39m[35m    at TCP.onread (net.js:540:20)[39m
+[34mW20170705-16:57:55.107(-7)? (STDERR) [39m[35mFrom previous event:[39m
+[34mW20170705-16:57:55.107(-7)? (STDERR) [39m[35m    at Query.run (/Users/isaac/workspace/slate/node_modules/sequelize/lib/dialects/mysql/query.js:44:12)[39m
+[34mW20170705-16:57:55.107(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/node_modules/sequelize/lib/sequelize.js:529:32[39m
+[34mW20170705-16:57:55.108(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/node_modules/retry-as-promised/index.js:40:21[39m
+[34mW20170705-16:57:55.108(-7)? (STDERR) [39m[35m    at retryAsPromised (/Users/isaac/workspace/slate/node_modules/retry-as-promised/index.js:30:10)[39m
+[34mW20170705-16:57:55.108(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/node_modules/sequelize/lib/sequelize.js:529:14[39m
+[34mW20170705-16:57:55.109(-7)? (STDERR) [39m[35mFrom previous event:[39m
+[34mW20170705-16:57:55.109(-7)? (STDERR) [39m[35m    at Sequelize.query (/Users/isaac/workspace/slate/node_modules/sequelize/lib/sequelize.js:526:8)[39m
+[34mW20170705-16:57:55.109(-7)? (STDERR) [39m[35m    at QueryInterface.createTable (/Users/isaac/workspace/slate/node_modules/sequelize/lib/query-interface.js:169:29)[39m
+[34mW20170705-16:57:55.109(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/node_modules/sequelize/lib/model.js:1114:37[39m
+[34mW20170705-16:57:55.110(-7)? (STDERR) [39m[35m    at processImmediate [as _immediateCallback] (timers.js:396:17)[39m
+[34mW20170705-16:57:55.110(-7)? (STDERR) [39m[35mFrom previous event:[39m
+[34mW20170705-16:57:55.110(-7)? (STDERR) [39m[35m    at Function.sync (/Users/isaac/workspace/slate/node_modules/sequelize/lib/model.js:1114:6)[39m
+[34mW20170705-16:57:55.110(-7)? (STDERR) [39m[35m    at server/db.js:84:15[39m
+[34mW20170705-16:57:55.111(-7)? (STDERR) [39m[35m    at Array.map (native)[39m
+[34mW20170705-16:57:55.111(-7)? (STDERR) [39m[35m    at meteorInstall.server.db.js (server/db.js:81:4)[39m
+[34mW20170705-16:57:55.111(-7)? (STDERR) [39m[35m    at fileEvaluate (packages/modules-runtime.js:333:9)[39m
+[34mW20170705-16:57:55.111(-7)? (STDERR) [39m[35m    at require (packages/modules-runtime.js:228:16)[39m
+[34mW20170705-16:57:55.112(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/.meteor/local/build/programs/server/app/app.js:145:1[39m
+[34mW20170705-16:57:55.112(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/.meteor/local/build/programs/server/boot.js:338:34[39m
+[34mW20170705-16:57:55.112(-7)? (STDERR) [39m[35m    at Array.forEach (native)[39m
+[34mW20170705-16:57:55.112(-7)? (STDERR) [39m[35m    at Function._.each._.forEach (/Users/isaac/.meteor/packages/meteor-tool/.1.5.0.u2qm97++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib/node_modules/underscore/underscore.js:79:11)[39m
+[34mW20170705-16:57:55.113(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/.meteor/local/build/programs/server/boot.js:158:5[39m
+[34mW20170705-16:57:55.113(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/.meteor/local/build/programs/server/boot.js:387:5[39m
+[34mW20170705-16:57:55.113(-7)? (STDERR) [39m[35m    at Function.run (/Users/isaac/workspace/slate/.meteor/local/build/programs/server/profile.js:510:12)[39m
+[34mW20170705-16:57:55.113(-7)? (STDERR) [39m[35m    at /Users/isaac/workspace/slate/.meteor/local/build/programs/server/boot.js:386:11[39m
+[34mI20170705-16:57:55.129(-7)? [39mExecuting (default): SHOW INDEX FROM `1ofs_uniques`
+[34mI20170705-16:57:55.131(-7)? [39mExecuting (default): SHOW INDEX FROM `cand`
+[34mI20170705-16:57:55.133(-7)? [39mExecuting (default): SHOW INDEX FROM `cand_consultants`
+[34mI20170705-16:57:55.134(-7)? [39mExecuting (default): SHOW INDEX FROM `cand_counts`
+[34mI20170705-16:57:55.141(-7)? [39mExecuting (default): SHOW INDEX FROM `cand_district`
+[34mI20170705-16:57:55.155(-7)? [39mExecuting (default): SHOW INDEX FROM `cand_donotsale`
+[34mI20170705-16:57:55.160(-7)? [39mExecuting (default): SHOW INDEX FROM `cand_donotemail`
+[34mI20170705-16:57:55.163(-7)? [39mExecuting (default): SHOW INDEX FROM `cand_drop`
+[34mI20170705-16:57:55.164(-7)? [39mExecuting (default): SHOW INDEX FROM `cand_email_counts`
+[34mI20170705-16:57:55.186(-7)? [39mExecuting (default): SHOW INDEX FROM `cand_info`
+[34mI20170705-16:57:55.190(-7)? [39mExecuting (default): SHOW INDEX FROM `cand_password`
+[34mI20170705-16:57:55.192(-7)? [39mExecuting (default): SHOW INDEX FROM `cand_salesperson`
+[34mI20170705-16:57:55.192(-7)? [39mExecuting (default): SHOW INDEX FROM `cand_text_conditions`
+[34mI20170705-16:57:55.193(-7)? [39mExecuting (default): SHOW INDEX FROM `cand_text_email`
+[34mI20170705-16:57:55.213(-7)? [39mExecuting (default): SHOW INDEX FROM `consultant_notes`
+[34mI20170705-16:57:55.215(-7)? [39mExecuting (default): SHOW INDEX FROM `cp_1ofs_uniques`
+[34mI20170705-16:57:55.218(-7)? [39mExecuting (default): SHOW INDEX FROM `cp_pages`
+[34mI20170705-16:57:55.219(-7)? [39mExecuting (default): SHOW INDEX FROM `cp_pages_html`
+[34mI20170705-16:57:55.223(-7)? [39mExecuting (default): SHOW INDEX FROM `current_mailing`
+[34mI20170705-16:57:55.247(-7)? [39mExecuting (default): SHOW INDEX FROM `cp_tmp_page`
+[34mI20170705-16:57:55.247(-7)? [39mExecuting (default): SHOW INDEX FROM `cp_pages_html_debug`
+[34mI20170705-16:57:55.247(-7)? [39mExecuting (default): SHOW INDEX FROM `email_counts`
+[34mI20170705-16:57:55.248(-7)? [39mExecuting (default): SHOW INDEX FROM `email_settings`
+[34mI20170705-16:57:55.248(-7)? [39mExecuting (default): SHOW INDEX FROM `filler_text`
+[34mI20170705-16:57:55.269(-7)? [39mExecuting (default): SHOW INDEX FROM `mailing_pages`
+[34mI20170705-16:57:55.271(-7)? [39mExecuting (default): SHOW INDEX FROM `hide`
+[34mI20170705-16:57:55.271(-7)? [39mExecuting (default): SHOW INDEX FROM `mailings`
+[34mI20170705-16:57:55.272(-7)? [39mExecuting (default): SHOW INDEX FROM `office`
+[34mI20170705-16:57:55.275(-7)? [39mExecuting (default): SHOW INDEX FROM `office_notes`
+[34mI20170705-16:57:55.297(-7)? [39mExecuting (default): SHOW INDEX FROM `office_temp`
+[34mI20170705-16:57:55.298(-7)? [39mExecuting (default): SHOW INDEX FROM `office_makeup`
+[34mI20170705-16:57:55.300(-7)? [39mExecuting (default): SHOW INDEX FROM `overlap`
+[34mI20170705-16:57:55.302(-7)? [39mExecuting (default): SHOW INDEX FROM `page_cands`
+[34mI20170705-16:57:55.302(-7)? [39mExecuting (default): SHOW INDEX FROM `page_counts`
+[34mI20170705-16:57:55.324(-7)? [39mExecuting (default): SHOW INDEX FROM `page_profits`
+[34mI20170705-16:57:55.327(-7)? [39mExecuting (default): SHOW INDEX FROM `pages`
+[34mI20170705-16:57:55.329(-7)? [39mExecuting (default): SHOW INDEX FROM `pages_html`
+[34mI20170705-16:57:55.330(-7)? [39mExecuting (default): SHOW INDEX FROM `pages_html_debug`
+[34mI20170705-16:57:55.331(-7)? [39mExecuting (default): SHOW INDEX FROM `pmatch_county_ind`
+[34mI20170705-16:57:55.348(-7)? [39mExecuting (default): SHOW INDEX FROM `pmatch`
+[34mI20170705-16:57:55.350(-7)? [39mExecuting (default): SHOW INDEX FROM `pmatch_county_ind_infill`
+[34mI20170705-16:57:55.361(-7)? [39mExecuting (default): SHOW INDEX FROM `pmatch_cw`
+[34mI20170705-16:57:55.362(-7)? [39mExecuting (default): SHOW INDEX FROM `pmatch_cw_infill`
+[34mI20170705-16:57:55.363(-7)? [39mExecuting (default): SHOW INDEX FROM `pmatch_direct`
+[34mI20170705-16:57:55.374(-7)? [39mExecuting (default): SHOW INDEX FROM `pmatch_direct_infill`
+[34mI20170705-16:57:55.376(-7)? [39mExecuting (default): SHOW INDEX FROM `pmatch_dw`
+[34mI20170705-16:57:55.386(-7)? [39mExecuting (default): SHOW INDEX FROM `pmatch_dw_infill`
+[34mI20170705-16:57:55.387(-7)? [39mExecuting (default): SHOW INDEX FROM `pmatch_sw`
+[34mI20170705-16:57:55.390(-7)? [39mExecuting (default): SHOW INDEX FROM `rpt_cand_cnty`
+[34mI20170705-16:57:55.402(-7)? [39mExecuting (default): SHOW INDEX FROM `pmatch_sw_infill`
+[34mI20170705-16:57:55.403(-7)? [39mExecuting (default): SHOW INDEX FROM `rpt_cand_first_appearance`
+[34mI20170705-16:57:55.413(-7)? [39mExecuting (default): SHOW INDEX FROM `rpt_cand_text_first_appearance`
+[34mI20170705-16:57:55.418(-7)? [39mExecuting (default): SHOW INDEX FROM `rpt_cand_voters`
+[34mI20170705-16:57:55.419(-7)? [39mExecuting (default): SHOW INDEX FROM `rpt_overflow_voters`
+[34mI20170705-16:57:55.426(-7)? [39mExecuting (default): SHOW INDEX FROM `rpt_page_cnty`
+[34mI20170705-16:57:55.428(-7)? [39mExecuting (default): SHOW INDEX FROM `rpt_page_voters`
+[34mI20170705-16:57:55.438(-7)? [39mExecuting (default): SHOW INDEX FROM `rpt_overflow`
+[34mI20170705-16:57:55.447(-7)? [39mExecuting (default): SHOW INDEX FROM `tbd`
+[34mI20170705-16:57:55.450(-7)? [39mExecuting (default): SHOW INDEX FROM `tmp_page`
+[34mI20170705-16:57:55.455(-7)? [39mExecuting (default): SHOW INDEX FROM `voters`
+[34mI20170705-16:57:55.456(-7)? [39mExecuting (default): SHOW INDEX FROM `posts`

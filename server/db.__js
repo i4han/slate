@@ -1,0 +1,113 @@
+
+
+// __.Module('web')  //__.xmap(['bc', 'ok'], ['Trades', 'Ticker', 'Depth'], (k, j) => k + j)
+// .mongo( ['bcTradesClean', 'okTradesClean', 'Depth'] )
+// .build()
+
+import { createApolloServer } from 'meteor/apollo'
+import { makeExecutableSchema } from 'graphql-tools'
+import { Sequelize } from 'sequelize'
+
+
+const PREFIX = 'models'
+
+models = {}
+const db = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, { host: process.env.DB_HOST, dialect: 'mysql' })
+// ;[ 
+//   '1ofs_all_combos.js',
+//   '1ofs_uniques.js',
+//   'cand.js',
+//   'cand_consultants.js',
+//   'cand_counts.js',
+//   'cand_district.js',
+//   'cand_donotemail.js',
+//   'cand_donotsale.js',
+//   'cand_drop.js',
+//   'cand_email_counts.js',
+//   'cand_image.js',
+//   'cand_info.js',
+//   'cand_password.js',
+//   'cand_salesperson.js',
+//   'cand_text.js',
+//   'cand_text_conditions.js',
+//   'cand_text_email.js',
+//   'consultant_notes.js',
+//   'cp_1ofs_uniques.js',
+//   'cp_pages.js',
+//   'cp_pages_html.js',
+//   'cp_pages_html_debug.js',
+//   'cp_tmp_page.js',
+//   'current_mailing.js',
+//   'email_counts.js',
+//   'email_settings.js',
+//   'filler_text.js',
+//   'hide.js',
+//   'mailing_pages.js',
+//   'mailings.js',
+//   'office.js',
+//   'office_makeup.js',
+//   'office_notes.js',
+//   'office_temp.js',
+//   'overlap.js',
+//   'page_cands.js',
+//   'page_counts.js',
+//   'page_profits.js',
+//   'pages.js',
+//   'pages_html.js',
+//   'pages_html_debug.js',
+//   'pmatch.js',
+//   'pmatch_county_ind.js',
+//   'pmatch_county_ind_infill.js',
+//   'pmatch_cw.js',
+//   'pmatch_cw_infill.js',
+//   'pmatch_direct.js',
+//   'pmatch_direct_infill.js',
+//   'pmatch_dw.js',
+//   'pmatch_dw_infill.js',
+//   'pmatch_sw.js',
+//   'pmatch_sw_infill.js',
+//   'rpt_cand_cnty.js',
+//   'rpt_cand_first_appearance.js',
+//   'rpt_cand_text_first_appearance.js',
+//   'rpt_cand_voters.js',
+//   'rpt_overflow.js',
+//   'rpt_overflow_voters.js',
+//   'rpt_page_cnty.js',
+//   'rpt_page_voters.js',
+//   'sales.js',
+//   'tbd.js',
+//   'tmp_page.js',
+//   'voters.js' ]
+//   .map(v => {
+//     let w = v.replace(/\.[^/.]+$/, ``)
+//     models[w] = require([PREFIX,v].join('/'))(db, Sequelize)
+//     models[w].sync()
+//   })
+db.define('post', {
+    content: { type: Sequelize.STRING }
+  , views:   { type: Sequelize.INTEGER }
+}, { timestamps: false })
+.sync()
+
+createApolloServer({
+    schema: makeExecutableSchema({
+        typeDefs: `
+            type Post {
+                id: Int
+                content: String
+                views: Int
+            }
+            type Query {
+                posts (views: Int): [Post]
+                say: String
+            }
+            schema {
+                query: Query
+            }`,
+        resolvers: {
+           Query: {
+               posts: (_, args) => db.models.post.findAll({where: args})
+             , say: (root, args, context) => 'hello world2'
+           }
+        },
+    })  })

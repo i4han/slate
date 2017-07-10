@@ -1,7 +1,8 @@
 
-import React, { Component, PropTypes } from 'react';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-export default class Post extends Component {
+export default class Post extends React.Component {
     constructor(props) { super(props) }
     render() { return (<div>{this.props.post.content}</div>) }
 }
@@ -11,4 +12,4 @@ Post.propTypes = {
     post: PropTypes.shape({
         content: PropTypes.string
     }).isRequired
-};
+}

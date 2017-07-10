@@ -1,9 +1,10 @@
-import React, { Component, PropTypes } from 'react';
+import React from 'react'
+import PropTypes from 'prop-types'
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import Post from './post'
 
-class Posts extends Component {
+class Posts extends React.Component {
     constructor(props) { super(props) }
     render() {
         return this.props.data.posts && this.props.data.posts instanceof Array
@@ -20,7 +21,6 @@ Posts.propTypes = {
 };
 
 // Define the graphql query to retrieve the posts and the desired attributes
-
 // Use the graphql container to run the allPosts query and pass the results to PostsContainer
 export default PostsContainer = graphql( gql`
   query PostsForDisplay {

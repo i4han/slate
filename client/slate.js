@@ -1,7 +1,8 @@
 'use strict'
 
-let api = require('incredibles')
-let color = api.color(require('color'), '#0000ff', 80)
+import api from 'incredibles'
+import clr from 'color'
+let color = api.color(clr, '#0000ff', 80)
 let get = v => {
     api.from(v.offices).forEach((w,i) => {
         let pieces = api.from(w.pieces || [])
@@ -15,27 +16,11 @@ let get = v => {
     Session.set('data', v)
 }
 
-import ApolloClient from 'apollo-client'
-import { meteorClientConfig } from 'meteor/apollo'
-const client = new ApolloClient(meteorClientConfig())
 
-// import { Meteor } from 'meteor/meteor';
-import { render } from 'react-dom';
-import React from 'react';
-
-import { ApolloProvider } from 'react-apollo';
-
-import App from '/imports/ui/App';
-
-
-api.module( 'app', {path: '/'}, v=>v.id('app', 'ok') )
-.onRendered(() => {
-  Meteor.setTimeout((() =>render(
-    <ApolloProvider client={client}>
-      <App/>
-    </ApolloProvider>, document.getElementById('app'))), 600)
-})
-
+// .mdBottomSheet(v=>v.
+//     .mdSubheader('contact:', v=>v.SPAN({class:'name'}, '{{vm.user.name}}'))
+//     .mdList(v=>v.mdItem({'ng-repeat':'item in vm.items'},v=>v
+//         .mdButton({'ng-click="controller"'},v=>v.mdIcon('md-svg-icon':"{{}}",'{{item.name}}'))))
 Meteor.setTimeout(( () => get(restful) ), 2000)
 
 api.module( 'blank', v=>v.include('yield') )
