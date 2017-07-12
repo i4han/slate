@@ -6,6 +6,7 @@ import ngAnimate  from 'angular-animate'
 import ngAria     from 'angular-aria'
 import ngSanitize from 'angular-sanitize'
 import ngMessages from 'angular-messages'
+import uiRouter   from 'angular-ui-router'
 
 // import ngApollo from 'angular-apollo'
 import ngApollo from 'angular1-apollo'
@@ -15,13 +16,22 @@ import gql from 'graphql-tag'
 import {DemoCtrl} from './ctrl.js'
 
 
-angular.module('main', ['ngSanitize', 'ngMaterial', 'ngAnimate', 'ngAria', 'ngMessages', 'angular-apollo'])
-.config(                      // https://github.com/apollographql/angular1-apollo
-    apolloProvider =>  
-        apolloProvider.defaultClient(new ApolloClient({
-            networkInterface: createNetworkInterface({ uri: 'http://localhost:3001/graphql' })
-        }))
-)
+$(window).load( () => {       
+    angular.bootstrap(document, ['main'])
+    api.getNode('#ng-app').setAttribute('style', 'display:inline')
+})
+
+angular.module('main', ['ngSanitize', 'ngMaterial', 'ngAnimate', 'ngAria', 'ngMessages', 'angular-apollo', uiRouter])
+.config( (apolloProvider, $stateProvider, $urlRouterProvider) => { 
+    apolloProvider.defaultClient(new ApolloClient({
+        networkInterface: createNetworkInterface({ uri: 'http://localhost:3001/graphql' })
+    }))
+    $stateProvider
+        .state('home', {
+            url: '/home',
+            template: '<div> I am home </div>'
+        })
+})
 .controller('ApolloCtrl', apollo => {
     apollo.query({
         query: gql`
@@ -33,8 +43,15 @@ angular.module('main', ['ngSanitize', 'ngMaterial', 'ngAnimate', 'ngAria', 'ngMe
     })
 })
 .controller('MainCtrl', $scope => {
-    $scope.name = 'World'
-    $scope.text = "<strong>this is html</strong>"
+    Object.assign($scope, {
+        name: 'World',
+        text: "<strong>this is html</strong>",
+        log: ($event) => {
+            api.getNode('.selected').if(v=> undefined !== v).thenSelf(v=>v.removeClassName('selected'))
+            console.log($event.target.innerText)
+            api.getNodeById($event.target.innerText).addClassName('selected')
+        }
+    })
 })
 .controller('Select', ['$scope', $scope => console.log($scope)])
 .controller('DemoCtrl', DemoCtrl)
@@ -78,16 +95,16 @@ api.module( 'md-autocomplete', {layout: 'ng'}, v=>v
             .mdContent({class:'md-padding'}, v=>v
                 .FORM({'ng-submit':"$event.preventDefault()"}, v=>v
                     .mdAutocomplete({
-                        'ng-disabled': "ctrl.isDisabled"
-                      , 'md-no-cache':"ctrl.noCache"
-                      , 'md-selected-item':"ctrl.selectedItem"
-                      , 'md-search-text-change':"ctrl.searchTextChange(ctrl.searchText)"
-                      , 'md-search-text':"ctrl.searchText"
-                      , 'md-selected-item-change':"ctrl.selectedItemChange(item)"
-                      , 'md-items':"item in ctrl.querySearch(ctrl.searchText)"
-                      , 'md-item-text':"item.display"
-                      , 'md-min-length':"0"
-                      , 'placeholder':"What is your favorite US state?" }, v=>v
+                        ng_disabled: "ctrl.isDisabled"
+                      , md_no_cache: "ctrl.noCache"
+                      , md_selected_item: "ctrl.selectedItem"
+                      , md_search_text_change: "ctrl.searchTextChange(ctrl.searchText)"
+                      , md_search_text: "ctrl.searchText"
+                      , md_selected_item_change: "ctrl.selectedItemChange(item)"
+                      , md_items: "item in ctrl.querySearch(ctrl.searchText)"
+                      , md_item_text: "item.display"
+                      , md_min_length: "0"
+                      , pl_ceholder: "What is your favorite US state?" }, v=>v
                         .mdItemTemplate(v=>v // , 'md-highlight-text':'ctrl.searchText','md-highlight-flags':"^i" doesn't work.
                             .SPAN({}, '{{item.display}}')  )
                         .mdNotFound(
@@ -171,22 +188,24 @@ api.module( 'md-checkbox', {layout: 'ng'}, v=>v
 
             // Blaze.Template[v.innerText].renderFunction().value
 __.select = v => {
-    api.getNode('.selected').if(v=> undefined !== v).thenSelf(v=>v.removeClassName('selected'))
-    console.log(v.innerText)
-    api.getNodeById(v.innerText).addClassName('selected')
 }
+
+//
+// main
+//
 
 let mdElements = 'md-autocomplete md-button md-checkbox ng-apollo'.split(' ')
 api.module( 'ngMain', {path: 'ng', layout: 'ng'}, v=>v
     .mdToolbar(v=>v.H2({style:'padding: 15px; margin: 0'}, 'Angular Material Demo'))
-    .DIV({class:'container', layout:'row', flex:''}, v=>v
+    .DIV({class:'container', 'ng-controller': 'MainCtrl', layout:'row', flex:''}, v=>v
         .mdSidenav({'md-is-locked-open':true, class:'md-whiteframe-4dp', flex:''}, v=>v
             .mdList(v=>v
                 .for(mdElements, (v,name)=>v
                     .mdListItem({style: 'padding: 0'}, v=>v
-                        .mdButton({id:'sidebar-button', onclick:'__.select(this)'}, name))  )
+                        .mdButton({id:'sidebar-button', 'ng-click': 'log($event)'}, name))  )
              )  )
         .mdContent({id:'content', flex:'', layout:'column'}, v=>v
+            .DIV({'ui-view': ''})
             .include('md-autocomplete')
             .include('md-button')
             .include('md-checkbox')
@@ -194,8 +213,8 @@ api.module( 'ngMain', {path: 'ng', layout: 'ng'}, v=>v
         )
     )  )
 .onRendered( o=> () => {
-    Meteor.setTimeout((()=> {
-        angular.bootstrap(document, ['main'])
-        api.getNode('#ng-app').setAttribute('style', 'display:inline')
-    }), 0)
+    // Meteor.setTimeout((()=> {
+    // }), 0)
 })
+
+
