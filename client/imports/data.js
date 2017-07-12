@@ -3,9 +3,9 @@
 // let color = ['#435058', '#848c8e', 'lightskyblue', '#bfb7b6', '#f1f2ee']
 
 
-color = ['#25242c', '#32313B', '#39b1c6', '#Ec3f8c',  '#1fd26a'] // Masha Studio
+export let color = ['#25242c', '#32313B', '#39b1c6', '#Ec3f8c',  '#1fd26a'] // Masha Studio
 
-restful = [{
+export let restful = [{
     "county": "Los Angeles",
     "code": "19",
     "offices": [
@@ -407,6 +407,8 @@ county0 = [
     id: '20'
   , county: 'Madera'
 }]
+
+
 county1 = [{
     id: '21'
   , county: 'Marin'
@@ -468,6 +470,8 @@ county1 = [{
     id: '40'
   , county: 'San Luis Obispo '
 }]
+
+
 county2 = [{
     id: '41'
   , county: 'San Mateo'
@@ -523,10 +527,11 @@ county2 = [{
     id: '58'
   , county: 'Yuba'
 }]
-county = {
+export let county = {
     county0: county0
   , county1: county1
   , county2: county2 }
+
 
 /*
 pos	position

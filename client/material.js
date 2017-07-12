@@ -1,4 +1,3 @@
-
 import api        from 'incredibles'
 import angular    from 'angular'
 import ngMaterial from 'angular-material'
@@ -8,30 +7,72 @@ import ngSanitize from 'angular-sanitize'
 import ngMessages from 'angular-messages'
 import uiRouter   from 'angular-ui-router'
 
-// import ngApollo from 'angular-apollo'
 import ngApollo from 'angular1-apollo'
 import ApolloClient, { createNetworkInterface } from 'apollo-client'
 import gql from 'graphql-tag'
 
-import {DemoCtrl} from './ctrl.js'
+import './imports/presemble.js'
+import {DemoCtrl} from './imports/ctrl.js'
 
-
-$(window).load( () => {       
-    angular.bootstrap(document, ['main'])
-    api.getNode('#ng-app').setAttribute('style', 'display:inline')
-})
-
-angular.module('main', ['ngSanitize', 'ngMaterial', 'ngAnimate', 'ngAria', 'ngMessages', 'angular-apollo', uiRouter])
-.config( (apolloProvider, $stateProvider, $urlRouterProvider) => { 
+let ngModule = angular
+.module('main', ['ngSanitize', 'ngMaterial', 'ngAnimate', 'ngAria', 'ngMessages', 'angular-apollo', uiRouter])
+.config( function (apolloProvider, $stateProvider, $locationProvider, $urlRouterProvider) { 
+    $locationProvider.html5Mode(true)
     apolloProvider.defaultClient(new ApolloClient({
         networkInterface: createNetworkInterface({ uri: 'http://localhost:3001/graphql' })
     }))
+    let div
     $stateProvider
         .state('home', {
             url: '/home',
-            template: '<div> I am home </div>'
+            template: 'I am Home'
         })
+        .state('ng', {
+            url: '/ng',
+            template: `<ui-view></ui-view>`
+        })
+        .state('ng.item', {
+            url: '/:item',
+            template: `<div class="{{content}}-content"></div>`,
+            // template: `<div id="item-content"></div>`,
+            controller: function ($scope, $element, $stateParams) {
+                console.log(0, $stateParams.item)
+                
+                $scope.content = $stateParams.item
+                // angular.element(document).injector().invoke(function($compile) {
+                //     $compile($element)( $scope )
+                // })
+            }
+            // controller: function ($scope, $stateParams, $compile, $sce) {
+            //     console.log(777, $stateParams.item)
+            //     $('#item-content').append( $compile(
+            //         HTML.toHTML(Blaze.Template[$stateParams.item].renderFunction().value)
+            //     )($scope) )
+            // }
+        })
+        .state('list', {
+            url: '/list',
+            template: 'I am list'
+        })
+    // $urlRouterProvider.otherwise("/")
 })
+
+let mdElements = 'md-autocomplete md-button md-checkbox ng-apollo'.split(' ')
+console.log(mdElements)
+mdElements.forEach( v =>
+    ngModule.directive(api.camelize(v + '-content'), function ($log) {
+        console.log(api.camelize(v + '-content'))
+        return {
+            restrict: 'C',
+            // replace: true,
+            template: HTML.toHTML(Blaze.Template[v].renderFunction().value)
+        }
+    })
+)
+
+
+
+ngModule
 .controller('ApolloCtrl', apollo => {
     apollo.query({
         query: gql`
@@ -46,10 +87,10 @@ angular.module('main', ['ngSanitize', 'ngMaterial', 'ngAnimate', 'ngAria', 'ngMe
     Object.assign($scope, {
         name: 'World',
         text: "<strong>this is html</strong>",
-        log: ($event) => {
-            api.getNode('.selected').if(v=> undefined !== v).thenSelf(v=>v.removeClassName('selected'))
-            console.log($event.target.innerText)
-            api.getNodeById($event.target.innerText).addClassName('selected')
+        select: ($event) => {
+            // api.getNode('.selected').if(v=> undefined !== v).thenSelf(v=>v.removeClassName('selected'))
+            console.log('select', $event.target.innerText)
+            // api.getNodeById($event.target.innerText).addClassName('selected')
         }
     })
 })
@@ -70,6 +111,7 @@ angular.module('main', ['ngSanitize', 'ngMaterial', 'ngAnimate', 'ngAria', 'ngMe
     $scope.data.cb5 = false
 })
 
+
 api.css({
     '#ng-app': {display:'none', padding: 0, margin: 0, width: '100%', 'min-height': '100%'}
 })
@@ -78,7 +120,7 @@ api.module( 'ng', v=>v.DIV({id:'ng-app', 'ng-app': 'main'}, v=>v.include('yield'
 
 api.css({
     '.container': { padding: 0, margin: 0 }
-  , '.item': { width: '100%', display: 'none', padding: 20 }
+  , '.item': { width: '100%', padding: 20 }
   , '#content > .selected': { display: 'inline' }
   , '#sidebar-button': {
         'text-align':'left'
@@ -87,6 +129,10 @@ api.css({
       , width:'100%', margin:0, padding:'6px 30px'
     }
 })
+api.module( 'home', null, v=>v
+    .DIV('Home:')
+    .DIV({ui_view: ''})
+)
 
 api.module( 'md-autocomplete', {layout: 'ng'}, v=>v
     .DIV({id: 'md-autocomplete', class:'item selected'}, v=>v
@@ -187,29 +233,29 @@ api.module( 'md-checkbox', {layout: 'ng'}, v=>v
 )
 
             // Blaze.Template[v.innerText].renderFunction().value
-__.select = v => {
-}
 
 //
 // main
 //
 
-let mdElements = 'md-autocomplete md-button md-checkbox ng-apollo'.split(' ')
-api.module( 'ngMain', {path: 'ng', layout: 'ng'}, v=>v
+api.module( 'ngMain', {path: '/ng', layout: 'ng'}, v=>v
     .mdToolbar(v=>v.H2({style:'padding: 15px; margin: 0'}, 'Angular Material Demo'))
     .DIV({class:'container', 'ng-controller': 'MainCtrl', layout:'row', flex:''}, v=>v
         .mdSidenav({'md-is-locked-open':true, class:'md-whiteframe-4dp', flex:''}, v=>v
             .mdList(v=>v
                 .for(mdElements, (v,name)=>v
                     .mdListItem({style: 'padding: 0'}, v=>v
-                        .mdButton({id:'sidebar-button', 'ng-click': 'log($event)'}, name))  )
-             )  )
+                        .mdButton({
+                            id:'sidebar-button', 
+                            ng_href: '/ng/' + name,
+                            ng_click: 'select($event)'}, name))  )
+            )  )
         .mdContent({id:'content', flex:'', layout:'column'}, v=>v
             .DIV({'ui-view': ''})
-            .include('md-autocomplete')
-            .include('md-button')
-            .include('md-checkbox')
-            .include('ng-apollo')
+            // .include('md-autocomplete')
+            // .include('md-button')
+            // .include('md-checkbox')
+            // .include('ng-apollo')
         )
     )  )
 .onRendered( o=> () => {

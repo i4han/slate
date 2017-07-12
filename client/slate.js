@@ -2,6 +2,8 @@
 
 import api from 'incredibles'
 import clr from 'color'
+import { restful, county } from './imports/data.js'
+
 let color = api.color(clr, '#0000ff', 80)
 let get = v => {
     api.from(v.offices).forEach((w,i) => {
@@ -17,10 +19,6 @@ let get = v => {
 }
 
 
-// .mdBottomSheet(v=>v.
-//     .mdSubheader('contact:', v=>v.SPAN({class:'name'}, '{{vm.user.name}}'))
-//     .mdList(v=>v.mdItem({'ng-repeat':'item in vm.items'},v=>v
-//         .mdButton({'ng-click="controller"'},v=>v.mdIcon('md-svg-icon':"{{}}",'{{item.name}}'))))
 Meteor.setTimeout(( () => get(restful) ), 2000)
 
 api.module( 'blank', v=>v.include('yield') )
@@ -234,7 +232,7 @@ api.module('slate')
 })
 .build('slate')
 
-api.module( 'search', {path:'search', layout: 'slate'},  v=>v
+api.module( 'search', {path:'/search', layout: 'slate'},  v=>v
     .for([-3, -2, -1, 0, 1, 2, 3, 4], (v,c)=>v.class('flex', v=>v
         .for('darken lighten desaturate fade'.split(' '), (v, method)=>v.class('flex', v=>v
             .for([0, 0.2, 0.4, 0.6, 0.8, 1], (v,n)=>v.DIV({style:'height:50px; width:50px; background:' + color(c)[method](n)}) )  )  )  )  )  )
@@ -328,7 +326,7 @@ api.css({
 })
 
 api.module('salesSheet')
-.router({path: 'sheet', layout: 'slate'})
+.router({path: '/sheet', layout: 'slate'})
 .body( v=>v
     .class( 'content', v=>v.with( 'data', v=>v.each( 'offices', v=>v
         .class( 'office-title', v=>v
