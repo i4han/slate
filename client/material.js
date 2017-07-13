@@ -1,4 +1,4 @@
-import api        from 'incredibles'
+
 import angular    from 'angular'
 import ngMaterial from 'angular-material'
 import ngAnimate  from 'angular-animate'
@@ -11,7 +11,9 @@ import ngApollo from 'angular1-apollo'
 import ApolloClient, { createNetworkInterface } from 'apollo-client'
 import gql from 'graphql-tag'
 
+import api from 'incredibles'
 import './imports/presemble.js'
+import './imports/bootstrap.js'
 import {DemoCtrl} from './imports/ctrl.js'
 
 let ngModule = angular
@@ -25,30 +27,37 @@ let ngModule = angular
     $stateProvider
         .state('home', {
             url: '/home',
-            template: 'I am Home'
+            template: `I am Home. Let's Start`
         })
-        .state('ng', {
+        .state('app', {
             url: '/ng',
             template: `<ui-view></ui-view>`
         })
-        .state('ng.item', {
-            url: '/:item',
-            template: `<div class="{{content}}-content"></div>`,
-            // template: `<div id="item-content"></div>`,
-            controller: function ($scope, $element, $stateParams) {
-                console.log(0, $stateParams.item)
-                
-                $scope.content = $stateParams.item
-                // angular.element(document).injector().invoke(function($compile) {
-                //     $compile($element)( $scope )
-                // })
+        .state('app.start', {
+            url: '/start',
+            template: 'I am started.',
+            controller: function ($scope, $stateParams) {
+                console.log('start')
             }
-            // controller: function ($scope, $stateParams, $compile, $sce) {
-            //     console.log(777, $stateParams.item)
-            //     $('#item-content').append( $compile(
-            //         HTML.toHTML(Blaze.Template[$stateParams.item].renderFunction().value)
-            //     )($scope) )
+        })
+        .state('app.item', {
+            url: '/:item',
+            // template: `<div class="{{content}}-content"></div>`,
+            template: `<div id="item-content"></div>`,
+            // controller: function ($scope, $element, $stateParams) {
+            //     console.log(0, $stateParams.item)
+                
+            //     $scope.content = $stateParams.item
+            //     // angular.element(document).injector().invoke(function($compile) {
+            //     //     $compile($element)( $scope )
+            //     // })
             // }
+            controller: function ($scope, $stateParams, $compile, $sce) {
+                console.log(777, $stateParams.item)
+                $('#item-content').append( $compile(
+                    HTML.toHTML(Blaze.Template[$stateParams.item].renderFunction().value)
+                )($scope) )
+            }
         })
         .state('list', {
             url: '/list',
@@ -113,15 +122,24 @@ ngModule
 
 
 api.css({
-    '#ng-app': {display:'none', padding: 0, margin: 0, width: '100%', 'min-height': '100%'}
+    '#ng-app': {
+        display: 'none', 
+        padding: 0, width: '100%',
+        margin: '50px 0 0 0', 
+        'min-height': '100%'
+    }
 })
 
-api.module( 'ng', v=>v.DIV({id:'ng-app', 'ng-app': 'main'}, v=>v.include('yield')) )
+api.module( 'app', v=>v.DIV({
+    id: 'ng-app', 
+    ng_app: 'main',
+    layout: 'column'
+}, v=>v.include('yield')) )
 
 api.css({
     '.container': { padding: 0, margin: 0 }
   , '.item': { width: '100%', padding: 20 }
-  , '#content > .selected': { display: 'inline' }
+//   , '#content > .selected': { display: 'inline' }
   , '#sidebar-button': {
         'text-align':'left'
       , 'text-transform': 'lowercase'
@@ -134,7 +152,35 @@ api.module( 'home', null, v=>v
     .DIV({ui_view: ''})
 )
 
-api.module( 'md-autocomplete', {layout: 'ng'}, v=>v
+api.define( 'toolbar', v=>v
+    .navbar( v=>v
+        .menuHeader( 'Isaac Han\'s Project' )
+        .menu( 'Home', '/home' )
+        .menu( 'Angular', '/ng/start' )
+        .menu( 'Sheet', '/sheet' )
+        .menu( 'Color', '/color' )
+    )
+)
+
+api.module( 'ngMain', {path: '/ng', layout: 'app'}, v=>v
+    .toolbar()
+    .DIV({class:'container', 'ng-controller': 'MainCtrl', layout:'row', flex:''}, v=>v
+        .mdSidenav({'md-is-locked-open':true, class:'md-whiteframe-4dp', flex:''}, v=>v
+            .mdList(v=>v
+                .for(mdElements, (v,name)=>v
+                    .mdListItem({style: 'padding: 0'}, v=>v
+                        .mdButton({
+                            id:'sidebar-button', 
+                            ng_href: '/ng/' + name,
+                            ng_click: 'select($event)'}, name))  )
+            )  )
+        .mdContent({id:'content', flex:'', layout:'column'}, v=>v
+            .DIV({'ui-view': ''})
+        )
+    )  
+)
+
+api.module( 'md-autocomplete', {layout: 'app'}, v=>v
     .DIV({id: 'md-autocomplete', class:'item selected'}, v=>v
         .LEGEND('Using <md-autocomplete>')
         .DIV({'ng-controller':'DemoCtrl as ctrl'}, v=>v
@@ -188,13 +234,13 @@ api.module( 'md-autocomplete', {layout: 'ng'}, v=>v
     )  )  )  )  )  )  )
 )
 
-api.module( 'ng-apollo', {layout:'ng'}, v=>v
+api.module( 'ng-apollo', {layout:'app'}, v=>v
     .DIV({id:'ng-apollo', class:'item', 'ng-controller':'ApolloCtrl'}, v=>v
         .LEGEND('Using <md-button>')
     )
 )
 
-api.module( 'md-button', {layout:'ng'}, v=>v
+api.module( 'md-button', {layout:'app'}, v=>v
     .DIV({id:'md-button', class:'item', 'ng-controller':'AppCtrl', 'ng-cloak':''}, v=>v
         .LEGEND('Using <md-button>')
         .mdContent(v=>v
@@ -213,7 +259,7 @@ api.module( 'md-button', {layout:'ng'}, v=>v
         )  )
 )
 
-api.module( 'md-checkbox', {layout: 'ng'}, v=>v
+api.module( 'md-checkbox', {layout: 'app'}, v=>v
     .DIV({id:'md-checkbox', class:'item md-padding', 'ng-controller':'checkCtrl', 'ng-cloak':''}, v=>v
         .DIV(v=>v.FIELDSET({class:'standard'},v=>v
             .LEGEND('Using <ng-mode>')
@@ -232,35 +278,5 @@ api.module( 'md-checkbox', {layout: 'ng'}, v=>v
             )  ))  )
 )
 
-            // Blaze.Template[v.innerText].renderFunction().value
-
-//
-// main
-//
-
-api.module( 'ngMain', {path: '/ng', layout: 'ng'}, v=>v
-    .mdToolbar(v=>v.H2({style:'padding: 15px; margin: 0'}, 'Angular Material Demo'))
-    .DIV({class:'container', 'ng-controller': 'MainCtrl', layout:'row', flex:''}, v=>v
-        .mdSidenav({'md-is-locked-open':true, class:'md-whiteframe-4dp', flex:''}, v=>v
-            .mdList(v=>v
-                .for(mdElements, (v,name)=>v
-                    .mdListItem({style: 'padding: 0'}, v=>v
-                        .mdButton({
-                            id:'sidebar-button', 
-                            ng_href: '/ng/' + name,
-                            ng_click: 'select($event)'}, name))  )
-            )  )
-        .mdContent({id:'content', flex:'', layout:'column'}, v=>v
-            .DIV({'ui-view': ''})
-            // .include('md-autocomplete')
-            // .include('md-button')
-            // .include('md-checkbox')
-            // .include('ng-apollo')
-        )
-    )  )
-.onRendered( o=> () => {
-    // Meteor.setTimeout((()=> {
-    // }), 0)
-})
 
 

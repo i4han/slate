@@ -142,7 +142,9 @@ api.css({
   , '#dropdown-caret': { luminate:[0, 1, 0.4], pad:[15, 12] }
   , 'button:active': {outline: 'none'}
   , '.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus': { luminate:[4, 1, 0.9] }
-  , '.multi-column-dropdown li a:hover': { luminate:[4, 1, 0.9] }  })
+  , '.multi-column-dropdown li a:hover': { luminate:[4, 1, 0.9] }
+  , '#body-content': { display: 'flex', 'flex-direction': 'column', margin: '120px 0 0 0' }
+})
 
 api.module('slate')
 .head( v=> ({
@@ -152,7 +154,7 @@ api.module('slate')
 }) )
 .body( v=>v
     .navbar( v=>v
-        .menu( 'Home', '#' )
+        .menu( 'Home', '/ng/home' )
         .menu( 'Slate Status', '#' )
         .menu( 'Reports', '#')
         .dropdown( 'View/Edit', v=>v
@@ -165,7 +167,7 @@ api.module('slate')
         .menu( 'Candidate Proof Page', '#' )
         .attrMenu( {id:'sign-in-or-out-button'}, 'Sign In' ) )
     .countyBar()
-    .include( 'yield' )
+    .id( 'body-content', v=>v .include( 'yield' ) )
     .modal( 'Add Candiate', 'add-candidate', v=>v.addCandidate(), 'Send' )
     // .SCRIPT( {src:"node_modules/material-components-web/dist/material-components-web.js"} )
 )
