@@ -2,7 +2,8 @@
 
 import api from 'incredibles'
 import clr from 'color'
-import { restful, county } from './imports/data.js'
+import { restful, county } from './data'
+import './bootstrap'
 
 let color = api.color(clr, '#0000ff', 80)
 let get = v => {
@@ -23,24 +24,24 @@ Meteor.setTimeout(( () => get(restful) ), 2000)
 
 api.module( 'blank', v=>v.include('yield') )
 
-api.define( 'navbar', (v, f)=>v
-    .class( 'navbar navbar-primary navbar-fixed-top', v=>v.class( 'container', v=>v
-        .DIV( {class:'collapse navbar-collapse', id:'ba-example-navbar-collapse-1'}, v=>v
-            .UL( {class: 'nav navbar-nav'}, f )  )  )  )  )
-api.define( 'menu', (v, menu, link)=>v .LI( v=>v.A( {href:link}, menu ) ) )
-api.define( 'attrMenu', (v, attr, menu )=>v .LI( v=>v.A( attr, menu ) ) )
-api.define( 'dropdown', (v, name, subMenu)=>v
-    .LI( {class:'dropdown'}, v=>v       //  role:'button', 'aria-expanded':'false'
-        .A( {href:'#', class:'dropdown-toggle', 'data-toggle':'dropdown', 'aria-haspopup':'true'}, name, v=>v
-            .SPAN( {class:'caret'} )  )
-        .UL( {class:'dropdown-menu'}, subMenu )  )  )
-api.define( 'divider', v=>v. LI( {role:'seperator', class:'divider'} ) )
-api.define( 'icon', (v, name, size)=>v
-    .SPAN( {class: 'glyphicon glyphicon-' + name, style:'font-size:'+ addPx([size || 10])}, '' )  )
-api.define( 'linefeed', (v, a) => v.DIV({style:'height:' + addPx([a]) }, '') )
-api.define( 'line',  (v, ...a) => v.class( 'flex-space',  v=> a.reduce(((b, w) => b.class('word', w)), v) )  )
-api.define( 'hr',    (v, w) => v
-    .class( 'flex-space',  v=>v.class('hr').class('hr-text', w).class('hr') )  )
+// api.define( 'navbar', (v, f)=>v
+//     .class( 'navbar navbar-primary navbar-fixed-top', v=>v.class( 'container', v=>v
+//         .DIV( {class:'collapse navbar-collapse', id:'ba-example-navbar-collapse-1'}, v=>v
+//             .UL( {class: 'nav navbar-nav'}, f )  )  )  )  )
+// api.define( 'menu', (v, menu, link)=>v .LI( v=>v.A( {href:link}, menu ) ) )
+// api.define( 'attrMenu', (v, attr, menu )=>v .LI( v=>v.A( attr, menu ) ) )
+// api.define( 'dropdown', (v, name, subMenu)=>v
+//     .LI( {class:'dropdown'}, v=>v       //  role:'button', 'aria-expanded':'false'
+//         .A( {href:'#', class:'dropdown-toggle', 'data-toggle':'dropdown', 'aria-haspopup':'true'}, name, v=>v
+//             .SPAN( {class:'caret'} )  )
+//         .UL( {class:'dropdown-menu'}, subMenu )  )  )
+// api.define( 'divider', v=>v. LI( {role:'seperator', class:'divider'} ) )
+// api.define( 'icon', (v, name, size)=>v
+//     .SPAN( {class: 'glyphicon glyphicon-' + name, style:'font-size:'+ addPx([size || 10])}, '' )  )
+// api.define( 'linefeed', (v, a) => v.DIV({style:'height:' + addPx([a]) }, '') )
+// api.define( 'line',  (v, ...a) => v.class( 'flex-space',  v=> a.reduce(((b, w) => b.class('word', w)), v) )  )
+// api.define( 'hr',    (v, w) => v
+//     .class( 'flex-space',  v=>v.class('hr').class('hr-text', w).class('hr') )  )
 
 let countyList = (i, c) => v=>v.each('county'+c, v=>v.attrMenu({class:'county-code column-' + i +'!', id:'{id}'}, '{id} - {county}'))
 

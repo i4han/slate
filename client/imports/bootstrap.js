@@ -11,7 +11,7 @@ api.define( 'menuHeader', (v, name) => v
         .class('navbar-text', v=>v.B(name)) ) )
 
 api.define( 'menu', (v, menu, link) => v 
-    .LI( v=>v.A( {href:link}, menu ) ) )
+    .LI( v=>v.A( {href: link, class: 'ok', ng_click: 'reload()'}, menu ) ) )
 
 api.define( 'attrMenu', (v, attr, menu )=>v 
     .LI( v=>v.A( attr, menu ) ) )
@@ -24,7 +24,9 @@ api.define( 'dropdown', (v, name, subMenu)=>v
         
 api.define( 'divider', v=>v
     .LI( {role:'seperator', class:'divider'} ) )
-    
+
+let addPx = (a, n) => undefined === n ? a.map(v=>isNaN(v) ? v : v+'px').join(' ') : a.map(v=>v * n +'px').join(' ')
+
 api.define( 'icon', (v, name, size)=>v
     .SPAN( {class: 'glyphicon glyphicon-' + name, style:'font-size:'+ addPx([size || 10])}, '' )  )
     

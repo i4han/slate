@@ -12,9 +12,9 @@ import ApolloClient, { createNetworkInterface } from 'apollo-client'
 import gql from 'graphql-tag'
 
 import api from 'incredibles'
-import './imports/presemble.js'
-import './imports/bootstrap.js'
-import {DemoCtrl} from './imports/ctrl.js'
+import './presemble'
+import './bootstrap'
+import {DemoCtrl} from './ctrl'
 
 let ngModule = angular
 .module('main', ['ngSanitize', 'ngMaterial', 'ngAnimate', 'ngAria', 'ngMessages', 'angular-apollo', uiRouter])
@@ -31,7 +31,7 @@ let ngModule = angular
         })
         .state('app', {
             url: '/ng',
-            template: `<ui-view></ui-view>`
+            template: `<ui-view></ui-view>` //HTML.toHTML(Blaze.Template['ng'].renderFunction().value)
         })
         .state('app.start', {
             url: '/start',
@@ -42,22 +42,21 @@ let ngModule = angular
         })
         .state('app.item', {
             url: '/:item',
-            // template: `<div class="{{content}}-content"></div>`,
-            template: `<div id="item-content"></div>`,
-            // controller: function ($scope, $element, $stateParams) {
-            //     console.log(0, $stateParams.item)
-                
-            //     $scope.content = $stateParams.item
-            //     // angular.element(document).injector().invoke(function($compile) {
-            //     //     $compile($element)( $scope )
-            //     // })
-            // }
-            controller: function ($scope, $stateParams, $compile, $sce) {
-                console.log(777, $stateParams.item)
-                $('#item-content').append( $compile(
-                    HTML.toHTML(Blaze.Template[$stateParams.item].renderFunction().value)
-                )($scope) )
+            template: `<div></div>`,
+            controller: function ($scope, $element, $compile, $stateParams) {
+                $element.replaceWith(
+                    $compile(
+                        HTML.toHTML(Blaze.Template[$stateParams.item].renderFunction().value)
+                    )($scope)
+                )
             }
+            // template: `<div id="item-content"></div>`,
+            // controller: function ($scope, $stateParams, $compile, $sce) {
+            //     console.log(777, $stateParams.item)
+            //     $('#item-content').append( $compile(
+            //         HTML.toHTML(Blaze.Template[$stateParams.item].renderFunction().value)
+            //     )($scope) )
+            // }
         })
         .state('list', {
             url: '/list',
@@ -67,7 +66,7 @@ let ngModule = angular
 })
 
 let mdElements = 'md-autocomplete md-button md-checkbox ng-apollo'.split(' ')
-console.log(mdElements)
+// console.log(mdElements)
 mdElements.forEach( v =>
     ngModule.directive(api.camelize(v + '-content'), function ($log) {
         console.log(api.camelize(v + '-content'))
@@ -92,15 +91,11 @@ ngModule
         console.log('got data', result.data)
     })
 })
-.controller('MainCtrl', $scope => {
+.controller('MainCtrl', ($scope, $state) => {
     Object.assign($scope, {
         name: 'World',
         text: "<strong>this is html</strong>",
-        select: ($event) => {
-            // api.getNode('.selected').if(v=> undefined !== v).thenSelf(v=>v.removeClassName('selected'))
-            console.log('select', $event.target.innerText)
-            // api.getNodeById($event.target.innerText).addClassName('selected')
-        }
+        reload: $state.reload
     })
 })
 .controller('Select', ['$scope', $scope => console.log($scope)])
@@ -123,7 +118,7 @@ ngModule
 
 api.css({
     '#ng-app': {
-        display: 'none', 
+        display: 'flex', 
         padding: 0, width: '100%',
         margin: '50px 0 0 0', 
         'min-height': '100%'
@@ -147,10 +142,8 @@ api.css({
       , width:'100%', margin:0, padding:'6px 30px'
     }
 })
-api.module( 'home', null, v=>v
-    .DIV('Home:')
-    .DIV({ui_view: ''})
-)
+api.module( 'home',    null, v=>v )
+api.module( 'ngItems', null, v=>v )
 
 api.define( 'toolbar', v=>v
     .navbar( v=>v
@@ -162,20 +155,30 @@ api.define( 'toolbar', v=>v
     )
 )
 
-api.module( 'ngMain', {path: '/ng', layout: 'app'}, v=>v
-    .toolbar()
-    .DIV({class:'container', 'ng-controller': 'MainCtrl', layout:'row', flex:''}, v=>v
-        .mdSidenav({'md-is-locked-open':true, class:'md-whiteframe-4dp', flex:''}, v=>v
-            .mdList(v=>v
-                .for(mdElements, (v,name)=>v
-                    .mdListItem({style: 'padding: 0'}, v=>v
-                        .mdButton({
-                            id:'sidebar-button', 
-                            ng_href: '/ng/' + name,
-                            ng_click: 'select($event)'}, name))  )
-            )  )
-        .mdContent({id:'content', flex:'', layout:'column'}, v=>v
-            .DIV({'ui-view': ''})
+api.module( 'ng', {path: '/ng', layout: 'app'}, v=>v
+    .DIV({
+        id: 'ng-app',
+        ng_app: 'main',
+        layout: 'column',    
+    }, v=>v
+        .DIV({class:'container', 'ng-controller': 'MainCtrl', layout:'row', flex:''}, v=>v
+        .toolbar()
+            .mdSidenav({'md-is-locked-open':true, class:'md-whiteframe-4dp', flex:''}, v=>v
+                .mdList(v=>v
+                    .for(mdElements, (v,name)=>v
+                        .mdListItem({style: 'padding: 0'}, v=>v
+                            .mdButton({
+                                id:'sidebar-button', 
+                                ng_href: '/ng/' + name,
+                                ng_click: 'reload()'
+                            }, name))  )
+                )  )
+            .mdContent({id:'content', flex:'', layout:'column'}, v=>v
+                // .include('yield')
+                .DIV({
+                    'ui-view': ''
+                })
+            )
         )
     )  
 )
