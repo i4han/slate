@@ -1,0 +1,16 @@
+{
+    "source": "./client", 
+    "excludes": [
+	"^.meteor/",
+	"^node_modules/",
+        "^resources/",
+        "^private/",
+        "^public/",
+        "^client/"
+    ],
+    "destination": "./public/doc",
+    "experimentalProposal": {
+	"classProperties": true,
+        "objectRestSpread": true
+    }
+}
