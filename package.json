@@ -1,6 +1,6 @@
 {
-  "name": "sat-spark",
-  "version": "0.0.3",
+  "name": "arm2",
+  "version": "0.0.1",
   "description": "test app",
   "main": "index.js",
   "scripts": {
@@ -9,17 +9,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/i4han/sat-spark.git"
+    "url": "git+https://github.com/i4han/arm2.git"
   },
   "keywords": [
-    "cubesat"
+    "arm"
   ],
   "author": "Isaac Han",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/i4han/sat-spark/issues"
+    "url": "https://github.com/i4han/arm2/issues"
   },
-  "homepage": "https://github.com/i4han/sat-spark#readme",
+  "homepage": "https://github.com/i4han/arm2#readme",
   "__meteor_forced_install": "meteor npm install --save accepts base64id cookie engine.io mime-db mime-types negotiator object-assign socket.io-adapter",
   "__user_install": "babel-runtime fibers meteor-node-stubs socket.ioclient",
   "dependencies": {
